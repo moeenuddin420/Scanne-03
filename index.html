@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+   <!-- Link Manifest -->
+<link rel="manifest" href="manifest.json">
+
+<!-- iOS PWA Tags -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/1067/1067568.png">
+
+<script>
+  // Register Service Worker for PWA & Notifications
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('firebase-messaging-sw.js')
+        .then(reg => console.log('SW Registered!', reg))
+        .catch(err => console.log('SW Registration failed', err));
+    });
+  }
+</script>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>G-ZONE | Deep Intelligence Manager</title>
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#020617">
+
+    <link href="https://fonts.googleapis.com/css2?family=Hind+Siliguri:wght@400;600;700&family=Rajdhani:wght@600;700&family=Outfit:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root { --bg-dark: #020617; --bg-card: #0f172a; --primary: #ef4444; --accent: #3b82f6; --success: #10b981; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Outfit', 'Hind Siliguri', sans-serif; }
+        
+        body { background-color: var(--bg-dark); color: #f8fafc; min-height: 100vh; padding-bottom: 50px; }
+        .hidden { display: none !important; }
+
+        header { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(10px); padding: 15px 20px; border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center; position: sticky; top: 0; z-index: 100; }
+        .logo { font-family: 'Rajdhani'; font-weight: 700; font-size: 1.1rem; color: #fff; letter-spacing: 2px; }
+        .logo span { color: var(--primary); }
+
+        .container { padding: 15px; max-width: 500px; margin: 0 auto; }
+        
+        /* Auth Styles */
+        .auth-box { height: 85vh; display: flex; flex-direction: column; justify-content: center; text-align: center; }
+        .input-group { margin-bottom: 15px; }
+        .input-group input { width: 100%; padding: 16px; background: #1e293b; border: 1px solid rgba(255,255,255,0.1); border-radius: 14px; color: #fff; outline: none; transition: 0.3s; }
+        .input-group input:focus { border-color: var(--accent); box-shadow: 0 0 15px rgba(59, 130, 246, 0.2); }
+        .btn { width: 100%; padding: 16px; border: none; border-radius: 14px; font-weight: bold; cursor: pointer; transition: 0.2s; }
+        .btn-primary { background: linear-gradient(135deg, var(--primary), #b91c1c); color: white; }
+
+        /* DEEP DATA CARD */
+        .report-card { background: var(--bg-card); border-radius: 20px; padding: 0; margin-bottom: 25px; border: 1px solid rgba(255,255,255,0.05); overflow: hidden; box-shadow: 0 10px 30px rgba(0,0,0,0.3); animation: slideUp 0.4s ease-out; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .card-header-status { background: rgba(239, 68, 68, 0.1); padding: 10px 20px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(239, 68, 68, 0.2); }
+        .report-id { font-family: 'Rajdhani'; color: var(--primary); font-weight: bold; font-size: 0.85rem; }
+        .report-time { font-size: 0.7rem; color: #64748b; }
+
+        .user-identity { padding: 20px; display: flex; align-items: center; gap: 15px; background: linear-gradient(to right, rgba(255,255,255,0.02), transparent); }
+        .user-avatar { width: 50px; height: 50px; border-radius: 15px; background: #1e293b; border: 2px solid rgba(255,255,255,0.1); object-fit: cover; }
+        .user-info h4 { font-size: 1.1rem; color: #fff; }
+        .user-info p { font-size: 0.8rem; color: #64748b; font-family: monospace; }
+
+        .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: rgba(255,255,255,0.05); border-top: 1px solid rgba(255,255,255,0.05); }
+        .data-item { background: var(--bg-card); padding: 15px 20px; }
+        .data-item small { display: block; color: #475569; font-size: 0.65rem; text-transform: uppercase; font-weight: 800; letter-spacing: 1px; margin-bottom: 4px; }
+        .data-item span { font-weight: bold; font-size: 0.95rem; color: #e2e8f0; }
+        .text-success { color: var(--success) !important; }
+        .text-accent { color: var(--accent) !important; }
+
+        .briefing-box { padding: 20px; background: rgba(239, 68, 68, 0.05); }
+        .briefing-title { font-size: 0.75rem; font-weight: 800; color: #ef4444; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+        .issue-item { background: #1e293b; border-left: 3px solid var(--primary); padding: 10px 15px; border-radius: 8px; font-size: 0.85rem; color: #cbd5e1; margin-bottom: 8px; }
+
+        .notif-banner { background: var(--accent); padding: 12px; border-radius: 12px; font-size: 0.85rem; text-align: center; margin-bottom: 20px; cursor: pointer; font-weight: 700; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3); }
+        .empty-state { text-align: center; padding: 100px 20px; color: #334155; }
+        .empty-state i { font-size: 4rem; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+
+    <!-- AUTH SECTION -->
+    <div id="auth-section" class="container">
+        <div class="auth-box">
+            <h1 class="logo" style="font-size: 2.8rem; margin-bottom: 5px;">SENTINEL<span>_PRO</span></h1>
+            <p style="color: #475569; margin-bottom: 40px; font-weight: 600; letter-spacing: 1px;">INTELLIGENCE MANAGER</p>
+            <div class="input-group">
+                <input type="email" id="email" placeholder="Manager Email">
+            </div>
+            <div class="input-group">
+                <input type="password" id="pass" placeholder="Authorization Key">
+            </div>
+            <button class="btn btn-primary" onclick="login()">Enter Secure Terminal</button>
+        </div>
+    </div>
+
+    <!-- MAIN DASHBOARD -->
+    <div id="main-section" class="hidden">
+        <header>
+            <div class="logo">G-ZONE <span>MANAGER</span></div>
+            <button onclick="logout()" style="background:none; border:none; color:#475569; font-size: 1.2rem;"><i class="fas fa-power-off"></i></button>
+        </header>
+
+        <div class="container">
+            <div id="notif-banner" class="hidden notif-banner" onclick="enablePush()">
+                <i class="fas fa-bell"></i> সিস্টেম নোটিফিকেশন চালু করুন
+            </div>
+
+            <h3 style="font-family: 'Rajdhani'; margin: 10px 0 20px; letter-spacing: 1px; color: #64748b;">LIVE_SECURITY_FEED</h3>
+            
+            <div id="report-feed">
+                <!-- Detailed Reports will load here -->
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, signInWithEmailAndPassword, onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, onSnapshot, query, orderBy, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+        import { getMessaging, getToken, onMessage } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-messaging.js";
+
+        const firebaseConfig = { 
+            apiKey: "AIzaSyAafXkJwyZ5F7Xuax0VktZ9cpqWD4oCvxU", 
+            authDomain: "tournament-97743.firebaseapp.com", 
+            projectId: "tournament-97743", 
+            messagingSenderId: "584797187828", 
+            appId: "1:584797187828:web:4c643f83dfd9b700adb8a1" 
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+        const messaging = getMessaging(app);
+
+        const MANAGER_UID = "3LOmRPEO3NQWbkCYqv33bcvy0I52";
+
+        // --- AUTH LOGIC ---
+        window.login = async () => {
+            const e = document.getElementById('email').value;
+            const p = document.getElementById('pass').value;
+            try {
+                const cred = await signInWithEmailAndPassword(auth, e, p);
+                if (cred.user.uid !== MANAGER_UID) {
+                    alert("Access Denied: Unrecognized Manager Account.");
+                    await signOut(auth);
+                }
+            } catch (err) { alert("Invalid Credentials"); }
+        };
+
+        window.logout = () => signOut(auth);
+
+        onAuthStateChanged(auth, (user) => {
+            if (user && user.uid === MANAGER_UID) {
+                document.getElementById('auth-section').classList.add('hidden');
+                document.getElementById('main-section').classList.remove('hidden');
+                initDashboard();
+                checkNotifPermission();
+            } else {
+                document.getElementById('auth-section').classList.remove('hidden');
+                document.getElementById('main-section').classList.add('hidden');
+            }
+        });
+
+        // --- REALTIME REPORTS WITH DEEP USER FETCH ---
+        async function initDashboard() {
+            const q = query(collection(db, "security_briefs"), orderBy("timestamp", "desc"));
+            
+            onSnapshot(q, async (snap) => {
+                const feed = document.getElementById('report-feed');
+                if (snap.empty) {
+                    feed.innerHTML = `<div class="empty-state"><i class="fas fa-shield-virus"></i><p>সিস্টেম নিরাপদ। কোনো হুমকি পাওয়া যায়নি।</p></div>`;
+                    return;
+                }
+
+                // Temporary storage for HTML cards
+                let cardsHtml = "";
+
+                // Use for...of to handle await inside loop
+                for (const reportDoc of snap.docs) {
+                    const brief = reportDoc.data();
+                    const userId = reportDoc.id;
+
+                    // FETCH FULL USER DATA FROM "users" COLLECTION
+                    const userSnap = await getDoc(doc(db, "users", userId));
+                    const u = userSnap.exists() ? userSnap.data() : { fullName: "Unknown User", email: "N/A", balance: 0, lastIP: "Unknown", customId: "N/A" };
+
+                    const time = brief.timestamp ? new Date(brief.timestamp.seconds * 1000).toLocaleString() : 'Just now';
+
+                    cardsHtml += `
+                        <div class="report-card">
+                            <div class="card-header-status">
+                                <span class="report-id">${brief.reportId || 'ID_MISSING'}</span>
+                                <span class="report-time"><i class="far fa-clock"></i> ${time}</span>
+                            </div>
+
+                            <div class="user-identity">
+                                <img src="${u.photoURL || 'https://via.placeholder.com/100'}" class="user-avatar">
+                                <div class="user-info">
+                                    <h4>${u.fullName || u.username}</h4>
+                                    <p>UID: ${u.customId || 'N/A'}</p>
+                                </div>
+                            </div>
+
+                            <div class="data-grid">
+                                <div class="data-item">
+                                    <small>ইমেইল অ্যাড্রেস</small>
+                                    <span>${u.email}</span>
+                                </div>
+                                <div class="data-item">
+                                    <small>বর্তমান ব্যালেন্স</small>
+                                    <span class="text-success">৳${u.balance || 0}</span>
+                                </div>
+                                <div class="data-item">
+                                    <small>লাস্ট কানেক্টেড আইপি</small>
+                                    <span class="text-accent">${u.lastIP || 'No IP Data'}</span>
+                                </div>
+                                <div class="data-item">
+                                    <small>অ্যাকাউন্ট স্ট্যাটাস</small>
+                                    <span class="${u.isBlocked ? 'text-primary' : ''}">${u.isBlocked ? 'LOCKED' : 'ACTIVE'}</span>
+                                </div>
+                            </div>
+
+                            <div class="briefing-box">
+                                <div class="briefing-title"><i class="fas fa-fingerprint"></i> DETECTION_SUMMARY</div>
+                                ${brief.issues.map(issue => `<div class="issue-item">${issue}</div>`).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+                feed.innerHTML = cardsHtml;
+            });
+        }
+
+        // --- PWA NOTIFICATIONS ---
+        async function checkNotifPermission() {
+            if ("Notification" in window && Notification.permission !== "granted") {
+                document.getElementById('notif-banner').classList.remove('hidden');
+            } else if (Notification.permission === "granted") {
+                setupFCM();
+            }
+        }
+
+        window.enablePush = async () => {
+            const permission = await Notification.requestPermission();
+            if (permission === "granted") {
+                document.getElementById('notif-banner').classList.add('hidden');
+                setupFCM();
+            }
+        };
+
+        async function setupFCM() {
+            try {
+                // Ensure service worker is ready before getting token
+                const registration = await navigator.serviceWorker.ready;
+                const token = await getToken(messaging, { 
+                    vapidKey: 'BKVqRDof4xyE2oZWEvMO3CSEsCQ9QPkbiT59bnJHQLWJ0ngm5I1pirwwTsNQ94AVR3fuWNeV6WPwhi5f5hsUFyQ',
+                    serviceWorkerRegistration: registration 
+                });
+                if (token) {
+                    await setDoc(doc(db, "users", MANAGER_UID), { fcmToken: token }, { merge: true });
+                }
+            } catch (err) { console.error("FCM Error:", err); }
+        }
+
+        onMessage(messaging, (payload) => {
+            new Notification(payload.notification.title, { 
+                body: payload.notification.body,
+                icon: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSAQtXn2gmgLcg4A-wuYXv-lPw7mZ3KXSUcIFVFSDy0NNqqU8bSc5gVAoqE&s=10'
+            });
+        });
+    </script>
+</body>
+</html>
